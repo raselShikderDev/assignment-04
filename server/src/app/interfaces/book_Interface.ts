@@ -1,3 +1,6 @@
+import { Model } from "mongoose";
+import { IBookBorrowDataForCreation } from "./borow_interfaces";
+
 export type genre = "FICTION" | "NON_FICTION" | "SCIENCE" | "HISTORY" | "BIOGRAPHY" | "FANTASY"
 
 export interface IBook {
@@ -8,4 +11,8 @@ export interface IBook {
   description:string;
   copies:number;
   available:boolean;
+}
+
+export interface IBookAvailablityCheak extends Model<IBook>{
+  bookAvailablity(value:{book:string, quantity:number}):Promise<IBookBorrowDataForCreation | null>;
 }

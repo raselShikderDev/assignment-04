@@ -28,7 +28,6 @@ interface BookCardProps {
   book: IBookFromDB;
 }
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  console.log("🛠️ Sending DELETE for ID:", book._id);
   return (
     <Card className="w-full shadow-sm">
       <CardHeader>
@@ -68,7 +67,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
               Edit
             </Button>
           </Link>
-          <Link to={`/borrow/${book.isbn}`} className="inline-block">
+          <Link to={`/borrow/${book._id}`} className="inline-block">
             <Button className="g-[#030208] hover:bg-[#3b3160] text-white" size="sm" disabled={!book.available}>
               Borrow
             </Button>

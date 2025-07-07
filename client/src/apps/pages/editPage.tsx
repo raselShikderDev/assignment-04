@@ -1,4 +1,4 @@
-import EditBook from "../custom_components/books/editBook"
+import EditBook from "../custom_components/books/EditBook"
 
 const EditPage = () => {
   return (

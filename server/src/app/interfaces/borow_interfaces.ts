@@ -6,3 +6,8 @@ export interface IBorrow{
     dueDate:Date;
 }
 
+export interface IBookBorrowDataForCreation {
+  book: string; 
+  quantity: number;
+  dueDate: Date;
+}

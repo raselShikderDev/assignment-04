@@ -91,7 +91,34 @@ bookController.delete(
   }
 );
 
-BookEditController.patch("/edit-book/:id", async (req: Request, res: Response, next: NextFunction)=>{
+bookController.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = await paramsIdZod.parseAsync(req.params);
+    const book = await BooksModel.findById(id);
+
+    if (!book) {
+       res.status(404).json({
+          success: false,
+          message: `Book with Id ${id} not found`,
+          error: {
+            name: "ResourceNotFoundError",
+            message: "The specified book could not be found.",
+          },
+        });
+        return
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book fetched successfully",
+      data: book,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+BookEditController.patch("/:id", async (req: Request, res: Response, next: NextFunction)=>{
   try {
     const { id } = await paramsIdZod.parseAsync(req.params);
     const body = await updateBookZod.parseAsync(req.body) 
@@ -105,7 +132,7 @@ BookEditController.patch("/edit-book/:id", async (req: Request, res: Response, n
         });
         return;
       }
-    const updatedBook = BooksModel.findByIdAndUpdate(id, body, {new:true})
+    const updatedBook = await BooksModel.findByIdAndUpdate(id, body, {new:true})
       if (!updatedBook) {
         res.status(404).json({
           success: false,

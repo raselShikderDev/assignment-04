@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input } from "@/components/components/ui/input";
 import {
   Select,
@@ -26,8 +26,9 @@ import { useEditBookMutation, useGetBookByIdQuery } from "src/apps/redux/api/boo
 import Loader from "../Loader";
 import Error from "../Error";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
-type BookFormValues = z.infer<typeof bookFormZod>;
+export type BookFormValues = z.infer<typeof bookFormZod>;
 
 const defaultValues: BookFormValues = {
   title: "",
@@ -39,31 +40,61 @@ const defaultValues: BookFormValues = {
   available: true,
 };
 
+
 function EditBook() {
-
   const { id } = useParams<{ id: string }>();
-  console.log(id);
-
-  // const [editBook] = useEditBookMutation();
-    const { data, isLoading, isError } = useGetBookByIdQuery(id!);
-  console.log(data);
+  console.log("EditBook component rendered, ID from params:", id); // LOG 1
+  const [editBook] = useEditBookMutation();
+    const { data, isLoading, isError, } = useGetBookByIdQuery(id!);
    const { register, handleSubmit, control, reset } = useForm<BookFormValues>({
     resolver: zodResolver(bookFormZod),
     defaultValues,
   });
+
+ useEffect(() => {
+  if (data) {
+      console.log("Data fetched from API:", data); // LOG 2
+    reset(data.data);
+  }
+}, [data, reset]);
   
   const navigate = useNavigate();
+  const onError = (errors: any) => {
+    console.error("React Hook Form Errors:", errors); // LOG 3
+  };
 
   const onSubmit = async (data: BookFormValues) => {
-    console.log("Submitted Data: ", data);
+    console.log("onSubmit called! Submitted Data: ", data); // LOG 4 - This is the one we want to see
     try {
-      // await createABook(data).unwrap();
-      // reset();
-      // navigate("/books");
+      if (!id) {
+        console.error("Book ID is missing for edit operation. Redirecting.");
+        navigate('/books');
+        return;
+      }
+      console.log("Attempting to edit book with ID:", id, "and data:", data); // LOG 5
+      await editBook({id: id!, data}).unwrap();
+      console.log("Book edited successfully! Navigating to /books."); // LOG 6
+      navigate("/books");
     } catch (error) {
-      // console.error("Create Book Error:", error);
+      console.error("Edit Book Mutation Error:", error); // LOG 7 - If RTK Query throws error
     }
   };
+
+
+//   const onSubmit = async (data: BookFormValues) => {
+//     console.log("Submitted Data: ", data);
+//     try {
+//       if (!id) {
+//     console.error("Book ID is missing for edit operation.");
+//     navigate('/books');
+//     return; 
+// }
+//       await editBook({id, data}).unwrap();
+//       navigate("/books");
+//     } catch (error) {
+//       console.error("Create Book Error:", error);
+//     }
+//   };
 
   if (isLoading) return <Loader />;
   if (isError) return <Error />;
@@ -74,7 +105,7 @@ function EditBook() {
         <CardTitle>Edit Book</CardTitle>
         <CardDescription>Edit book details</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <CardContent>
           <div className="flex flex-col gap-3">
             <Input {...register("title")} placeholder="Title" />
@@ -138,7 +169,7 @@ function EditBook() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button type="submit" className="w-full">
-            Create
+            Save Changes
           </Button>
         </CardFooter>
       </form>
