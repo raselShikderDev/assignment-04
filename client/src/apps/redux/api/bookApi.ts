@@ -33,7 +33,7 @@ export interface IBorrowResponse {
 
 export const bookApi = createApi({
   reducerPath: "bookApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://server-mylibray.onrender.com/" }),
   tagTypes: ["Books"],
   endpoints: (builder) => ({
     getAllBook: builder.query<IBooksApiResponse, void>({

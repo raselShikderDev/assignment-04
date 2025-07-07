@@ -19,7 +19,7 @@ export interface IBorrowResponse {
 
 export const borrowApi = createApi({
   reducerPath: "borrowApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/borrow/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://server-mylibray.onrender.com/borrow/" }),
   tagTypes: [ "Borrows"],
   endpoints: (builder) => ({
     createBorrow: builder.mutation<IBorrowResponse, IBorrowRequest>({

@@ -1,3 +1,5 @@
+
+
 {
   "compilerOptions": {
     "target": "esnext",
@@ -9,10 +11,15 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": ".", 
+
     "paths": {
-      "@/components/*": ["src/components/*"],
-      "@/lib/*": ["src/lib/*"]
+      "@/*": ["src/*"],                          
+      "src/*": ["src/*"],                        
+      "@/components/*": ["src/components/*"],   
+      "@/lib/*": ["src/lib/*"],                  
+      "@/apps/*": ["src/apps/*"],                
+      "@/pages/*": ["src/pages/*"]               
     }
   },
   "include": ["src"]
