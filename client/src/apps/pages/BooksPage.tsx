@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { BookCard } from "../custom_components/books/BookCard";
 import Error from "../custom_components/Error";
 import Loader from "../custom_components/Loader";
-// import { useGetAllBookQuery } from "../redux/api/bookApi";
-import { useGetAllBookQuery } from "@/apps/redux/api/bookApi";
+import { useGetAllBookQuery } from "../redux/api/bookApi";
+// import { useGetAllBookQuery } from "@/apps/redux/api/bookApi";
 import { Types } from "mongoose";
 import { Link } from "react-router-dom";
 

@@ -5,12 +5,9 @@ import globalErrorHandler from "./app/middleware/globalError";
 import borrowRouter from "./app/controllers/borrow_controllers";
 
 const app: Application = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://your-client.vercel.app", 
-];
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin: "http://localhost:5173",
   credentials: true
 }));
 app.use(express.json());
