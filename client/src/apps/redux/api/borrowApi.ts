@@ -17,6 +17,21 @@ export interface IBorrowResponse {
   };
 }
 
+export interface IAggregatedBorrowSummary {
+  book: {
+    title: string;
+    isbn: string;
+  };
+  totalQuantity: number;
+}
+
+export interface IBorrowSummaryApiResponse {
+  success: boolean;
+  message: string;
+  data: IAggregatedBorrowSummary[];
+}
+
+
 export const borrowApi = createApi({
   reducerPath: "borrowApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://server-mylibray.onrender.com/borrow/" }),
@@ -30,9 +45,13 @@ export const borrowApi = createApi({
       }),
       invalidatesTags: ["Borrows"],
     }),
+    getBorrowSummary: builder.query<IBorrowSummaryApiResponse, void>({
+      query: () => "/", 
+      providesTags: ["Borrows"],
+    }),
   }),
 });
 
 
 
-export const { useCreateBorrowMutation  } = borrowApi;
+export const { useCreateBorrowMutation, useGetBorrowSummaryQuery } = borrowApi;

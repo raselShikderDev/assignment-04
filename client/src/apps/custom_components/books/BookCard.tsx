@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { DeleteBookButton } from "./deleteDialoge";
 import { Types } from "mongoose";
 
-export type Genre = 
+export type Genre =
   | "FICTION"
   | "NON_FICTION"
   | "SCIENCE"
@@ -14,7 +14,7 @@ export type Genre =
   | "FANTASY";
 
 export interface IBookFromDB {
-   _id: Types.ObjectId;
+  _id: Types.ObjectId;
   title: string;
   author: string;
   genre: Genre;
@@ -22,12 +22,13 @@ export interface IBookFromDB {
   description?: string;
   copies: number;
   available: boolean;
-  __v?: number; 
+  __v?: number;
 }
 interface BookCardProps {
   book: IBookFromDB;
 }
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
+
   return (
     <Card className="w-full shadow-sm">
       <CardHeader>
@@ -67,12 +68,21 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
               Edit
             </Button>
           </Link>
-          <Link to={`/borrow/${book._id}`} className="inline-block">
-            <Button className="g-[#030208] hover:bg-[#3b3160] text-white" size="sm" disabled={!book.available}>
+          {book.copies > 0 ? (
+            <Link to={`/borrow/${book._id}`} className="inline-block">
+              <Button
+                className="bg-[#030208] hover:bg-[#3b3160] text-white"
+                size="sm"
+              >
+                Borrow
+              </Button>
+            </Link>
+          ) : (
+            <Button className="bg-gray-400 text-white" size="sm" disabled>
               Borrow
             </Button>
-          </Link>
-           <DeleteBookButton id={book._id.toString()} />
+          )}
+          <DeleteBookButton id={book._id.toString()} />
         </div>
       </CardContent>
     </Card>

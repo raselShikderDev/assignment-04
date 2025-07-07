@@ -39,7 +39,7 @@ const defaultValues: BookFormValues = {
 };
 
 export function CreateBook() {
-  const { register, handleSubmit, control, reset } = useForm<BookFormValues>({
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<BookFormValues>({
     resolver: zodResolver(bookFormZod), 
     defaultValues,
   });
@@ -48,7 +48,6 @@ export function CreateBook() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: BookFormValues) => {
-    console.log("Submitted Data: ", data);
     try {
       await createABook(data).unwrap();
       reset();
@@ -71,7 +70,9 @@ export function CreateBook() {
         <CardContent>
           <div className="flex flex-col gap-3">
             <Input {...register("title")} placeholder="Title" />
+            {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
             <Input {...register("author")} placeholder="Author" />
+             {errors.author && <p className="text-red-500 text-sm">{errors.author.message}</p>}
             <Controller
               control={control}
               name="genre"
@@ -94,7 +95,9 @@ export function CreateBook() {
                 </Select>
               )}
             />
+             {errors.genre && <p className="text-red-500 text-sm">{errors.genre.message}</p>}
             <Input {...register("isbn")} placeholder="ISBN" />
+            {errors.isbn && <p className="text-red-500 text-sm">{errors.isbn.message}</p>}
             <Input {...register("description")} placeholder="Description" />
             <Input
               type="number"

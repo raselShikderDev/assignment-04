@@ -11,7 +11,6 @@ import { Input } from "@/components/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/components/ui/form";
 
 
-// Zod schema for validation
 const borrowSchema = z.object({
   quantity: z.number().int().positive("Quantity must be greater than 0"),
   dueDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
@@ -37,7 +36,6 @@ const BorrowForm = () => {
   });
 
   const onSubmit = async (formData: BorrowFormType) => {
-    console.log("Requested for Borrow");
     
     try {
       await createBorrow({
@@ -45,7 +43,6 @@ const BorrowForm = () => {
         quantity: formData.quantity,
         dueDate: new Date(formData.dueDate).toISOString(),
       }).unwrap();
-      console.log("Successfuly Borrowed a book");
       navigate("/borrow-summary");
     } catch (err) {
       console.error("Borrow Error:", err);

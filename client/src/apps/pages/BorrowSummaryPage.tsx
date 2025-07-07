@@ -1,54 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from "react";
 import Loader from "../custom_components/Loader";
 import Error from "../custom_components/Error";
 import BorrowSummaryCard from "../custom_components/borrow/borrowSummerycard";
+import { useGetBorrowSummaryQuery } from "../redux/api/borrowApi";
 
-interface BorrowSummaryItem {
-  book: {
-    title: string;
-    isbn: string;
-  };
-  totalQuantity: number;
-}
 
 const BorrowSummaryPage = () => {
-  const [summary, setSummary] = useState<BorrowSummaryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+const { data, error, isLoading } = useGetBorrowSummaryQuery();
 
-  const fetchSummary = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/borrow");
-      const json = await res.json();
-      if (json.success) {
-        setSummary(json.data);
-      } else {
-        setHasError(true);
-      }
-    } catch (err) {
-      setHasError(true);
-      
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSummary();
-  }, []);
-
-  if (loading) return <Loader />;
-  if (hasError) return <Error />;
+  if (isLoading) return <Loader />;
+  if (error) return <Error />;
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 space-y-6">
       <h1 className="text-2xl font-bold text-center">Borrow Summary</h1>
-      {summary.length === 0 ? (
+      {data?.data.length === 0 ? (
         <p className="text-center text-muted-foreground">No borrowed books found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {summary.map((item, idx) => (
+          {data?.data.map((item, idx) => (
             <BorrowSummaryCard
               key={idx}
               title={item.book.title}
@@ -63,3 +32,44 @@ const BorrowSummaryPage = () => {
 };
 
 export default BorrowSummaryPage;
+
+
+
+// import Loader from "../custom_components/Loader";
+// import Error from "../custom_components/Error";
+// import BorrowSummaryCard from "../custom_components/borrow/borrowSummerycard"; // UNCOMMENT THIS
+// import { useGetBorrowSummaryQuery } from "../redux/api/borrowApi";
+
+
+// const BorrowSummaryPage = () => {
+// const { data, error, isLoading } = useGetBorrowSummaryQuery();
+// console.log("Data from API:", data);
+
+//   if (isLoading) return <Loader />;
+//   if (error) {
+//     console.error("API Error:", error);
+//     return <Error />;
+//   }
+
+//   return (
+//     <div className="max-w-5xl mx-auto py-8 px-4 space-y-6">
+//       <h1 className="text-2xl font-bold text-center">Borrow Summary</h1>
+//       {data?.data.length === 0 ? (
+//         <p className="text-center text-muted-foreground">No borrowed books found.</p>
+//       ) : (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {data?.data.map((item, idx) => (
+//             <BorrowSummaryCard
+//               key={idx}
+//               title={item.book.title}
+//               isbn={item.book.isbn}
+//               totalQuantity={item.totalQuantity}
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default BorrowSummaryPage;

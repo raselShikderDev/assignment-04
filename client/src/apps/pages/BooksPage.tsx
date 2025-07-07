@@ -29,7 +29,6 @@ export interface IFrontendBook {
 const BooksPage = () => {
   const { data, isLoading, isError, } = useGetAllBookQuery();
   const books = data?.data;
-  console.log(books);
   if (isLoading) return <Loader />;
 
   if (isError) {
